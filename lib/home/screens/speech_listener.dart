@@ -14,7 +14,8 @@ class SpeechListner {
 
   late Bloc speechBloc = BlocProvider.of<SpeechBloc>(context);
 
-  SpeechListner(this.context);
+  SpeechListner(this.context) {}
+
   SpeechToText speech = SpeechToText();
 
   void onResultHandler(SpeechRecognitionResult val) {

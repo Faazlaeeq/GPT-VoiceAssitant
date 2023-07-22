@@ -9,10 +9,13 @@ class ApiCall {
   }
 
   void getApiKey() {
-    _apikey = const String.fromEnvironment('OPENAIKEY');
-    if (_apikey == null || _apikey!.isEmpty) {
-      throw Exception('OPENAIKEY not found');
-    }
+    _apikey = "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";
+    // _apikey = const String.fromEnvironment('OPENAIKEY');
+    // if (_apikey == null || _apikey!.isEmpty) {
+    //   throw Exception('OPENAIKEY not found');
+    // } else {
+    //   print("Api key found");
+    // }
   }
 
   Future<String> sendRequest(String message) async {
@@ -32,16 +35,17 @@ class ApiCall {
           Uri.parse("https://api.openai.com/v1/chat/completions"),
           headers: headers,
           body: body);
-      // print(response.body);
+      print(response.body);
+      print("body: $body headers: $headers");
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
+        print(jsonResponse['choices'][0]['message']['content'].toString());
         return jsonResponse['choices'][0]['message']['content'].toString();
       } else {
         return "Error ${response.statusCode}";
       }
     } catch (e) {
-      print(e);
-      return "Error";
+      return "Error: $e";
     }
   }
 }

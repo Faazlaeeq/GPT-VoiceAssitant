@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gpt_voice_assistant/home/screens/speech_listener.dart';
 
+import '../logic/bloc/speech_bloc.dart';
 import '../widgets/customwidgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late SpeechListner speechListener;
-
+  List<Widget> customWidgets = [];
   @override
   void initState() {
     super.initState();
@@ -28,15 +30,42 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Voice Assistant"),
       ),
       body: Column(children: [
-        Card(
-          child: Column(
-            children: [
-              const ListTile(
-                title: Text("Hello"),
-                subtitle: Text("How can I help you?"),
-              ),
-              CustomWidgets().textBlock(context),
-            ],
+        Expanded(
+          child: Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const ListTile(
+                  title: Text("Hello"),
+                  subtitle: Text("How can I help you?"),
+                ),
+
+                Flexible(
+                    fit: FlexFit.loose,
+                    child: BlocConsumer<SpeechBloc, SpeechState>(
+                      builder: (context, state) => ListView.builder(
+                        itemCount: customWidgets.length,
+                        itemBuilder: (context, index) {
+                          if (state is SpeechLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          return customWidgets[index];
+                        },
+                      ),
+                      listener: (ctx, state) {
+                        if (state is SpeechUpdated) {
+                          customWidgets.add(
+                              CustomWidgets().textBlock(state.speech, context));
+                        } else if (state is SpeechResponse) {
+                          customWidgets.add(CustomWidgets()
+                              .textBlock(state.res, context, isRes: true));
+                        }
+                      },
+                    )),
+                // CustomWidgets().textBlock(context),
+              ],
+            ),
           ),
         ),
         Row(

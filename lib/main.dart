@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gpt_voice_assistant/home/logic/bloc/speech_bloc.dart';
 import 'package:gpt_voice_assistant/home/logic/cubit/mic_cubit.dart';
 import 'package:gpt_voice_assistant/home/screens/home_screen.dart';
-import 'package:gpt_voice_assistant/home/screens/speech_listener.dart';
 
 void main() {
   runApp(const MyApp());

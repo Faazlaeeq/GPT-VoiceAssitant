@@ -10,6 +10,14 @@ abstract class SpeechState extends Equatable {
 
 class SpeechInitial extends SpeechState {}
 
+class SpeechLoading extends SpeechState {}
+
+class SpeechResponse extends SpeechState {
+  final String res;
+
+  const SpeechResponse(this.res);
+}
+
 class SpeechUpdated extends SpeechState {
   final String speech;
 

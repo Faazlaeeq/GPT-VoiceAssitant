@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gpt_voice_assistant/home/logic/bloc/speech_bloc.dart';
 
 import '../logic/cubit/mic_cubit.dart';
 import '../screens/speech_listener.dart';
@@ -11,22 +10,8 @@ class CustomWidgets {
   final streamController = StreamController<String>.broadcast();
 
   void listen(BuildContext ctx) {
-    // final reply = await ApiCall().sendRequest("who are you?");
-    StreamSubscription? subscription;
     final sl = SpeechListner(ctx);
     sl.speechInit();
-
-    String result = "";
-
-    subscription = sl.streamController.stream.listen((event) {
-      print(event + "by custom widgets");
-      result += event;
-      ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
-      ScaffoldMessenger.of(ctx)
-          .showSnackBar(SnackBar(content: Text(event.toString())));
-
-      subscription!.cancel();
-    });
 
     // print(reply);
   }
@@ -50,16 +35,26 @@ class CustomWidgets {
     );
   }
 
-  Widget textBlock(BuildContext context) {
-    return BlocBuilder<SpeechBloc, SpeechState>(
-      builder: (ctx, state) {
-        print("State is $state");
-        if (state is SpeechUpdated) {
-          return Text(state.speech);
-        } else {
-          return const Text("No speech detected");
-        }
-      },
+  Widget textBlock(String text, BuildContext context, {bool isRes = false}) {
+    return Row(
+      mainAxisAlignment:
+          isRes ? MainAxisAlignment.start : MainAxisAlignment.end,
+      children: [
+        Container(
+            margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+            padding: const EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              color: isRes ? Colors.grey[900] : Colors.blueAccent,
+              border: Border.all(
+                  color: isRes ? Colors.grey.shade900 : Colors.blueAccent),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.white),
+            )),
+      ],
     );
   }
 
