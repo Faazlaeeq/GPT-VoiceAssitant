@@ -15,9 +15,15 @@ class SpeechBloc extends Bloc<SpeechEvent, SpeechState> {
         speech += " ${event.speech}";
         emit(SpeechUpdated(speech));
         ApiCall apiCall = ApiCall();
+        print("Sending request");
         emit(SpeechLoading());
-        String res = await apiCall.sendRequest(event.speech);
-        emit(SpeechResponse(res));
+        await Future.delayed(const Duration(seconds: 10));
+        print("Loading emitted");
+        await apiCall.sendRequest(event.speech).then((value) {
+          emit(SpeechResponse(value));
+        });
+
+        print("Response emitted");
       }
       if (event is EmptySpeech) {
         speech = "";

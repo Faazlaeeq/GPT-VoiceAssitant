@@ -15,10 +15,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late SpeechListner speechListener;
+  late ScrollController _controller;
   List<Widget> customWidgets = [];
   @override
   void initState() {
     super.initState();
+    _controller = ScrollController();
+
     speechListener = SpeechListner(context);
     speechListener.speechInit();
   }
@@ -45,11 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: BlocConsumer<SpeechBloc, SpeechState>(
                       builder: (context, state) => ListView.builder(
                         itemCount: customWidgets.length,
+                        controller: _controller,
                         itemBuilder: (context, index) {
-                          if (state is SpeechLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
                           return customWidgets[index];
                         },
                       ),
@@ -58,8 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           customWidgets.add(
                               CustomWidgets().textBlock(state.speech, context));
                         } else if (state is SpeechResponse) {
+                          customWidgets.removeLast();
                           customWidgets.add(CustomWidgets()
                               .textBlock(state.res, context, isRes: true));
+                        } else if (state is SpeechLoading) {
+                          customWidgets.add(CustomWidgets().textBlock(
+                              "", context,
+                              loading: true, isRes: true));
                         }
                       },
                     )),

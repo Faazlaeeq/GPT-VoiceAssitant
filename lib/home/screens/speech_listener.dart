@@ -14,7 +14,9 @@ class SpeechListner {
 
   late Bloc speechBloc = BlocProvider.of<SpeechBloc>(context);
 
-  SpeechListner(this.context) {}
+  SpeechListner(this.context) {
+    speechBloc.add(const ConcatenateSpeech(speech: "Hello"));
+  }
 
   SpeechToText speech = SpeechToText();
 

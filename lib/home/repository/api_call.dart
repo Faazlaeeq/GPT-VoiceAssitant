@@ -35,11 +35,8 @@ class ApiCall {
           Uri.parse("https://api.openai.com/v1/chat/completions"),
           headers: headers,
           body: body);
-      print(response.body);
-      print("body: $body headers: $headers");
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print(jsonResponse['choices'][0]['message']['content'].toString());
         return jsonResponse['choices'][0]['message']['content'].toString();
       } else {
         return "Error ${response.statusCode}";

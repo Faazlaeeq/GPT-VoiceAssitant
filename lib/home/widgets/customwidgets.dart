@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../logic/cubit/mic_cubit.dart';
 import '../screens/speech_listener.dart';
@@ -35,7 +36,15 @@ class CustomWidgets {
     );
   }
 
-  Widget textBlock(String text, BuildContext context, {bool isRes = false}) {
+  final loader = SizedBox(
+    width: 5,
+    child: LoadingAnimationWidget.waveDots(
+      color: Colors.blue,
+      size: 30,
+    ),
+  );
+  Widget textBlock(String text, BuildContext context,
+      {bool isRes = false, loading = false}) {
     return Row(
       mainAxisAlignment:
           isRes ? MainAxisAlignment.start : MainAxisAlignment.end,
@@ -43,17 +52,19 @@ class CustomWidgets {
         Container(
             margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
             padding: const EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: loading ? 10 : MediaQuery.of(context).size.width * 0.8,
             decoration: BoxDecoration(
               color: isRes ? Colors.grey[900] : Colors.blueAccent,
               border: Border.all(
                   color: isRes ? Colors.grey.shade900 : Colors.blueAccent),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(
-              text,
-              style: const TextStyle(color: Colors.white),
-            )),
+            child: loading
+                ? loader
+                : Text(
+                    text,
+                    style: const TextStyle(color: Colors.white),
+                  )),
       ],
     );
   }
